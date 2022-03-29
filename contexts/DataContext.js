@@ -17,103 +17,71 @@ export const DataProvider = (props) => {
   const navigation = useNavigation();
 
 
-  const dataToken = async () => {
+  const axios = require('axios');
+  const headers = {
+    authorization: "Bearer " + token,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+  const url = "https://authenticationcorewebapi20220215151416.azurewebsites.net";
+  const dataToken = () => {
 
-    await fetch(
-      "https://authenticationcorewebapi20220215151416.azurewebsites.net/login",
-      {
-         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          userName: "mbilen",
-          password: "1234" 
-        }),
-      }
-    )
-      .then((response) => response.text()).
-      then((responseText) => {
-        if (responseText != "") {
-          setToken(JSON.stringify(responseText).slice(3, -3));
-          console.log(token);
+    axios.post(url + '/login', {
+      UserName: "mbilen",
+      Password: "1234",
+    })
+      .then(function (response) {
+        if (response.status == 200) {
+          console.log(response);
+          setToken(response.data);
           navigation.navigate("Home");
         }
+        
       })
-      .catch((error) => {
-        console.log("Hata : ", error);
+      .catch(function (error) {
+        console.log(error);
       });
+
   };
   const dataGetAll = () => {
-    fetch(
-      "https://authenticationcorewebapi20220215151416.azurewebsites.net/getAll",
-      {
-        method: "GET",
-        headers: {
-          authorization: "Bearer " + token,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.clear();
-        const k = JSON.parse(responseText);
+
+
+    axios.get(url + "/getAll", { headers })
+      .then(function (response) {
+        const k = (response.data);
         setSetKitapList(k);
         Object.keys(k).map((key, i) => console.log(k[key]));
       })
-      .catch((error) => {
-        console.log("Get All Books kısmında hata", error);
+      .catch(function (error) {
+        console.log(error);
       });
+
+
+
   };
   const dataCreate = () => {
-    fetch(
-      "https://authenticationcorewebapi20220215151416.azurewebsites.net/create",
-      {
-        method: "POST",
-        headers: {
-          authorization: "Bearer " + token,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          author: author,
-          title: title,
-          rating: rating,
-        }),
-      }
-    )
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(JSON.parse(responseText));
-      })
-      .catch((error) => {
-        console.log("Add Book Kısmında Hata: ", error);
-      });
+
+    const createe = {
+      author: author,
+      title: title,
+      rating: rating,
+    }
+
+    axios.post(url + "/create", createe, { headers })
+      .then(response => response.data.id);
+
   };
   const dataUpdate = () => {
-    fetch(
-      "https://authenticationcorewebapi20220215151416.azurewebsites.net/update",
-      {
-        method: "PUT",
-        headers: {
-          authorization: "Bearer " + token,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: updateId,
-          author: author,
-          title: title,
-          rating: rating,
-        }),
-      }
-    )
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
+    const updatee = {
+      id: updateId,
+      author: author,
+      title: title,
+      rating: rating,
+    }
+    axios.put(url + "/update", updatee, { headers })
+
+      .then((response) => {
+        console.log(response);
         dataGetAll();
       })
       .catch((error) => {
@@ -121,21 +89,11 @@ export const DataProvider = (props) => {
       });
   };
   const dataDelete = (bookId) => {
-    fetch(
-      "https://authenticationcorewebapi20220215151416.azurewebsites.net/delete" +
-      "?id=" +
-      bookId,
-      {
-        method: "DELETE",
-        headers: {
-          authorization: "Bearer " + token,
+    axios.delete(url + "/delete?id=" + bookId, { headers })
 
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.text())
       .then((responseText) => {
+        console.log(responseText);
+
         dataGetAll();
       })
       .catch((error) => {

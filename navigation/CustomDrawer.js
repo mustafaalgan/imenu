@@ -4,7 +4,7 @@ import { createDrawerNavigator, DrawerContentScrollView, } from "@react-navigati
 import { COLORS, SIZES, constants, icons, dummyData, } from "../constants";
 import Home from "../screens/Home";
 import Wallet from "../screens/Wallet";
-import Favorite from "../screens/Favourite";
+import Settings from "../screens/Settings";
 import Notification from "../screens/Notification";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
@@ -69,14 +69,14 @@ const CustomDrawerContent = ({ navigation }) => {
               navigation.navigate("Home");
             }} />
 
-<CustomDrawerItem
+          <CustomDrawerItem
             label={constants.screens.my_wallet}
             icon={icons.wallet}
             onPress={() => {
               navigation.closeDrawer();
               navigation.navigate("Wallet");
             }} />
-             
+
 
           <CustomDrawerItem
             label={constants.screens.notification}
@@ -87,11 +87,11 @@ const CustomDrawerContent = ({ navigation }) => {
             }} />
 
           <CustomDrawerItem
-            label={constants.screens.favorite}
+            label={constants.screens.settings}
             icon={icons.favorite}
             onPress={() => {
               navigation.closeDrawer();
-              navigation.navigate("Favorite");
+              navigation.navigate("Settings");
             }} />
 
           <CustomDrawerItem
@@ -147,7 +147,7 @@ const CustomDrawer = () => {
           width: "65%",
           paddingRight: 20,
         }}
-        initialRouteName="Login"
+        initialRouteName="Settings"
         drawerContent={props => {
           return (
             <CustomDrawerContent navigation={props.navigation} />
@@ -157,7 +157,7 @@ const CustomDrawer = () => {
 
         <Drawer.Screen name="Home" component={Home} />
         <Drawer.Screen name="Wallet" component={Wallet} />
-        <Drawer.Screen name="Favorite" component={Favorite} />
+        <Drawer.Screen name="Settings" component={Settings} />
         <Drawer.Screen name="Notification" component={Notification} />
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Restaurant" component={Restaurant} />
